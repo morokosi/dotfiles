@@ -4,9 +4,7 @@
 SAVEHIST=1000000
 HISTSIZE=1000000
 HISTFILE=~/.zhistory
-#SHELL=/bin/zsh
 
-LANG=ja_jp.UTF-8
 #
 # Color Settings
 #
@@ -89,9 +87,6 @@ alias ls='ls -F --color=yes --show-control-chars'
 #alias l='ls -lAgs | less -r'
 #alias la='ls -A'
 #alias ll='ls -l'
-alias wl='emacs -e wl'
-alias sr16k='ssh 133.9.65.72'
-alias rs440='ssh 133.9.65.74'
 alias egdb='emacs24 -f gud-gdb'
 
 
@@ -112,7 +107,3 @@ esac
 
 bindkey '^P' history-beginning-search-backward
 bindkey '^N' history-beginning-search-forward
-
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
