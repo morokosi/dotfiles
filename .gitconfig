@@ -1,0 +1,26 @@
+[user]
+	name = kisimoto
+	email = kisimoto@kasahara.cs.waseda.ac.jp
+[i18n]
+	commitencoding = UTF-8
+	logoutputencoding = UTF-8
+[core]
+	editor = vim
+[color]
+	ui = true
+[alias]
+	tr = log --graph --date=short --pretty='format:%C(yellow)%h%Creset %s %Cgreen(%an)%Creset %Cred%d%Creset [%ad]'
+
+[merge]
+tool = diffconflicts
+
+[mergetool "diffconflicts"]
+cmd = "diffconflicts vim $BASE $LOCAL $REMOTE $MERGED"
+trustExitCode = true
+keepBackup = false
+
+#[rerere]
+#enabled = true
+
+[url "https://"]
+	insteadOf = git://

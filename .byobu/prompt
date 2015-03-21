@@ -1,0 +1,1 @@
+[ -r /r/homesc2/kisimoto/opt/local/share/byobu/profiles/bashrc ] && . /r/homesc2/kisimoto/opt/local/share/byobu/profiles/bashrc  #byobu-prompt#
