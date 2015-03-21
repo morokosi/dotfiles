@@ -58,6 +58,5 @@ set fileformats=unix,dos,mac
 if exists('&ambiwidth')
   set ambiwidth=double
 endif
-execute pathogen#infect()
 syntax on
 filetype plugin indent on
