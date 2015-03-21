@@ -1,8 +1,45 @@
+;;; -*-Emacs-Lisp-*-
 (setq load-path (append '("~/.emacs.d") load-path))
-(setq load-path (append '("~/opt/local/share/emacs/site-lisp/") load-path))
+;;;(setq load-path (append '("~/opt/local/share/emacs/site-lisp/") load-path))
+(setq load-path (append '("/usr/local/share/gtags/") load-path))
+
+;;; package manager
+(when (> emacs-major-version 23)
+(require 'package))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 
 (global-set-key "\C-h" 'delete-backward-char)
-;;; -*-Emacs-Lisp-*-
+
+;;;
+(require 'cl)
+
+(defvar installing-package-list
+  '(
+    ;; ここに使っているパッケージを書く。
+    auto-complete
+    ;;auto-complete-config
+    ;;ac-company
+    ;;gtags-mode
+    sr-speedbar
+    color-theme
+    ansi-color
+    yasnippet
+    highlight-symbol
+    git-blame
+    ;flymake
+    ))
+
+(let ((not-installed (loop for x in installing-package-list
+                            when (not (package-installed-p x))
+                            collect x)))
+  (when not-installed
+    (package-refresh-contents)
+    (dolist (pkg not-installed)
+      (package-install pkg))))
 ;;; デバッグ時は以下をコメントアウト
 ;;; (setq debug-on-error t)
 (menu-bar-mode 0)
@@ -136,25 +173,6 @@
 ;; auto-fill-mode では、各行を 70 文字以内に詰める
 (set-default 'fill-column 60)
 
-(defvar aix
-  (equal system-type 'aix))
-
-(cond
-  (aix
-   (set-language-environment "Japanese")
-   (setq load-path
-   (cons "/usr/local/share/emacs/site-lisp/anthy/" load-path))
-   (load-file "/usr/local/share/emacs/site-lisp/anthy/leim-list.el")
-   (load-library "anthy")
-   (setq default-input-method "japanese-anthy")
-  )
-)
-
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
-(setq wl-prefetch-confirm nil)
-
 (global-font-lock-mode 1)
 
 
@@ -164,25 +182,25 @@
 
 (global-auto-complete-mode t)
 
-(require 'ac-company)
+;;(require 'ac-company)
 
 
-(add-to-list 'auto-mode-alist (cons  "\\.\\(mq\\|q\\|bq\\)\\'" 'q-mode))
-(autoload 'q-mode "q-mode" nil t)
-(add-hook 'q-mode-hook 
-         (lambda ()
-           (run-with-idle-timer 1.0 t 'get-operand-tip)))
+;;(add-to-list 'auto-mode-alist (cons  "\\.\\(mq\\|q\\|bq\\)\\'" 'q-mode))
+;;(autoload 'q-mode "q-mode" nil t)
+;;(add-hook 'q-mode-hook 
+;;         (lambda ()
+;;           (run-with-idle-timer 1.0 t 'get-operand-tip)))
 
 ;;(ac-company-define-source ac-source-company-xcode company-xcode)
-(ac-company-define-source ac-source-company-gtags company-gtags)
+;;(ac-company-define-source ac-source-company-gtags company-gtags)
 
 (setq ac-modes (append ac-modes '(c-mode)))
 (setq ac-modes (append ac-modes '(c++-mode)))
 
-(add-hook 'c-mode-hook
-	  (lambda ()
-	    add-to-list 'ac-sources 'ac-source-company-gtags)
-	  )
+;;(add-hook 'c-mode-hook
+;;	  (lambda ()
+;;	    add-to-list 'ac-sources 'ac-source-company-gtags)
+;;	  )
 
 (define-key ac-completing-map (kbd "C-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-p") 'ac-previous)
@@ -214,10 +232,6 @@
 
 ))
 
-(load "~/.emacs.d/haskell-mode-2.4/haskell-site-file")
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-
 (require 'sr-speedbar)
 (global-set-key (kbd "C-c RET") 'sr-speedbar-toggle)
 (setq sr-speedbar-right-side nil) 
@@ -247,8 +261,8 @@
   (toggle-read-only))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
-(load "clang-format.el")
-(global-set-key "\C-c\C-f" 'clang-format-region)
+;;(load "clang-format.el")
+;;(global-set-key "\C-c\C-f" 'clang-format-region)
 
 
 (require 'cl)
@@ -294,13 +308,6 @@
 ;(global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 
 ;(require 'cl-lib)
-(when (> emacs-major-version 23)
-(require 'package))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (require 'flymake)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
