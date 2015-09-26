@@ -1,5 +1,5 @@
 ;;; -*-Emacs-Lisp-*-
-(setq load-path (append '("~/.emacs.d") load-path))
+(setq load-path (append '("~/.emacs.d/elpa") load-path))
 ;;;(setq load-path (append '("~/opt/local/share/emacs/site-lisp/") load-path))
 (setq load-path (append '("/usr/local/share/gtags/") load-path))
 
@@ -289,6 +289,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(c-basic-offset 4)
+ '(js2-basic-offset 2)
+ '(json-reformat:indent-width 2)
  '(mail-indentation-spaces 2)
  '(yas-trigger-key "TAB"))
 
@@ -314,4 +316,27 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(flymake-errline ((t (:inherit error :underline t)))))
+
+(add-to-list 'auto-mode-alist (cons (rx ".js" eos) 'js2-mode))
+(eval-after-load "js2-mode"
+  '(progn
+     (setq-default js2-basic-offset 2) ; 2 spaces for indentation (if you prefer 2 spaces instead of default 4 spaces for tab)
+
+     ;; add from jslint global variable declarations to js2-mode globals list
+     ;; modified from one in http://www.emacswiki.org/emacs/Js2Mode
+     (defun my-add-jslint-declarations ()
+       (when (> (buffer-size) 0)
+	 (let ((btext (replace-regexp-in-string
+		       (rx ":" (* " ") "true") " "
+		       (replace-regexp-in-string
+			(rx (+ (char "\n\t\r "))) " "
+			;; only scans first 1000 characters
+			(save-restriction (widen) (buffer-substring-no-properties (point-min) (min (1+ 1000) (point-max)))) t t))))
+	   (mapc (apply-partially 'add-to-list 'js2-additional-externs)
+		 (split-string
+		  (if (string-match (rx "/*" (* " ") "global" (* " ") (group (*? nonl)) (* " ") "*/") btext)
+		      (match-string-no-properties 1 btext) "")
+		  (rx (* " ") "," (* " ")) t))
+	   )))
+     (add-hook 'js2-post-parse-callbacks 'my-add-jslint-declarations)))
