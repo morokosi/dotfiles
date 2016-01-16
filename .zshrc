@@ -83,7 +83,7 @@ compctl -g '*.ps' gv lpr idraw
 #
 # Aliases
 #
-alias ls='ls -F --color=yes --show-control-chars'
+alias ls='gls -F --color=yes --show-control-chars'
 #alias l='ls -lAgs | less -r'
 #alias la='ls -A'
 #alias ll='ls -l'
